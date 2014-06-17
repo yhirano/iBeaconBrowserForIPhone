@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2014 Yuichi Hirano
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 #import <CoreLocation/CoreLocation.h>
 #import "iBeasonSampleConfig.h"
 #import "BeaconBrowserViewController.h"
@@ -21,6 +43,7 @@
 
     self.title = @"iBeacon browser";
 
+    // Create CLLocationManager and CLBeaconRegion and add to locationManagerAndBeacons_ list.
     if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]]) {
         locationManagerAndBeacons_ = [[NSMutableArray alloc] initWithCapacity:[BLE_UUIDS count]];
         for (NSString *uuidString in BLE_UUIDS) {
@@ -44,6 +67,7 @@
 {
     [super viewDidAppear:animated];
     
+    // Start monitoring.
     for (LocationManagerAndRegion *locationManagerAndRegion in locationManagerAndBeacons_) {
         [locationManagerAndRegion.locationManager startMonitoringForRegion:locationManagerAndRegion.beaconRegion];
     }
@@ -53,6 +77,7 @@
 {
     [super viewWillDisappear:animated];
 
+    // Stop monitoring.
     for (LocationManagerAndRegion *locationManagerAndRegion in locationManagerAndBeacons_) {
         [locationManagerAndRegion.locationManager stopMonitoringForRegion:locationManagerAndRegion.beaconRegion];
         locationManagerAndRegion.locationManager.delegate = nil;
@@ -64,6 +89,7 @@
 
 #pragma mark - Private methods
 
+// Remove beacon info from beacons_ list.
 - (void)removeBeaconFromBeacons:(NSArray*)beacons
 {
     NSMutableArray *removeTargets = [NSMutableArray array];
@@ -86,6 +112,8 @@
 {
     for (LocationManagerAndRegion *locationManagerAndRegion in locationManagerAndBeacons_) {
         if (locationManagerAndRegion.locationManager == manager) {
+            // モニタリング監視時に、現在自分が、iBeacon監視でどういう状態にいるかを知らせてくれるように要求する。
+            // これを呼ばないと locationManager: didDetermineState: forRegion: が呼ばれないので注意。
             [locationManagerAndRegion.locationManager requestStateForRegion:region];
         }
     }
@@ -95,6 +123,7 @@
 {
     switch (state) {
         case CLRegionStateInside:
+            // リージョン内にいる場合は、通知の受け取りを開始する
             if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
                 CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
                 [manager startRangingBeaconsInRegion:beaconRegion];
@@ -103,6 +132,7 @@
         case CLRegionStateOutside:
         case CLRegionStateUnknown:
         default:
+            // リージョン内にいる場合は、通知の受け取りを停止する
             if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
                 CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;;
                 [manager stopRangingBeaconsInRegion:beaconRegion];
@@ -113,6 +143,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
+    // リージョンの境界を越えて入った時にも同じく通知を開始する
     if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
         [manager startRangingBeaconsInRegion:(CLBeaconRegion *)region];
     }
@@ -120,6 +151,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
+    // リージョンの境界を越えて出ていった時にも同じく通知を停止する
     if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
         [manager stopRangingBeaconsInRegion:(CLBeaconRegion *)region];
     }
@@ -133,8 +165,10 @@
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
+    // ビーコンから通知を受けた場合は、beacons_リストに入っている同じビーコンの情報を一旦削除する
     [self removeBeaconFromBeacons:beacons];
 
+    // そしてそのビーコンの情報を追加する（ビーコン情報の削除と追加で、beacons_リストの更新）
     NSDate *nowDate = [NSDate date];
     for (CLBeacon *beacon in beacons) {
         BeaconAndDate *beaconAndDate = [[BeaconAndDate alloc] initWithBeacon:beacon date:nowDate];
@@ -142,6 +176,7 @@
         [beacons_ addObject:beaconAndDate];
     }
     
+    // beacons_リストを日付で更新
     NSSortDescriptor *sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
     [beacons_ sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
     
