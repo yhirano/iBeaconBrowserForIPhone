@@ -23,6 +23,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "iBeasonSampleConfig.h"
 #import "BeaconBrowserViewController.h"
+#import "BeaconCell.h"
 #import "LocationManagerAndRegion.h"
 #import "BeaconAndDate.h"
 
@@ -204,13 +205,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    BeaconCell *cell = (BeaconCell*)[tableView dequeueReusableCellWithIdentifier:@"BeaconCell"];
     
-    if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-    }
-
     BeaconAndDate *beaconAndDate = [beacons_ objectAtIndex:indexPath.row];
     NSString *proximity;
     
@@ -231,9 +227,12 @@
             break;
     }
     
-    cell.textLabel.text = [beaconAndDate.beacon.proximityUUID UUIDString];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"Major: %@, Minor: %@, Prox:%@, Ac: %.2fm",
-                                 [beaconAndDate.beacon.major stringValue], [beaconAndDate.beacon.minor stringValue], proximity, beaconAndDate.beacon.accuracy];
+    cell.proxyimityUUIDLabel.text = [beaconAndDate.beacon.proximityUUID UUIDString];
+    cell.majorLabel.text = [NSString stringWithFormat:@"Major: %@", [beaconAndDate.beacon.major stringValue]];
+    cell.minorLabel.text = [NSString stringWithFormat:@"Minor: %@", [beaconAndDate.beacon.minor stringValue]];
+    cell.proximityLabel.text = [NSString stringWithFormat:@"Proximity: %@", proximity];
+    cell.accuracyLabel.text = [NSString stringWithFormat:@"Accuracy: %.2fm", beaconAndDate.beacon.accuracy];
+    cell.rssiLabel.text = [NSString stringWithFormat:@"Accuracy: %lddBm", beaconAndDate.beacon.rssi];
 
     return cell;
 }

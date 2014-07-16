@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E59A69A1976C01B00399770 /* BeaconCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E59A6991976C01B00399770 /* BeaconCell.m */; };
 		8EDE6B1918E128D400FECE09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDE6B1818E128D400FECE09 /* Foundation.framework */; };
 		8EDE6B1B18E128D400FECE09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDE6B1A18E128D400FECE09 /* CoreGraphics.framework */; };
 		8EDE6B1D18E128D400FECE09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDE6B1C18E128D400FECE09 /* UIKit.framework */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E59A6981976C01B00399770 /* BeaconCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeaconCell.h; sourceTree = "<group>"; };
+		8E59A6991976C01B00399770 /* BeaconCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeaconCell.m; sourceTree = "<group>"; };
 		8EDE6B1518E128D400FECE09 /* iBeaconBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iBeaconBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EDE6B1818E128D400FECE09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8EDE6B1A18E128D400FECE09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -96,6 +99,8 @@
 				8EDE6B2818E128D400FECE09 /* AppDelegate.m */,
 				8EDE6B5918E1293000FECE09 /* BeaconBrowserViewController.h */,
 				8EDE6B5A18E1293000FECE09 /* BeaconBrowserViewController.m */,
+				8E59A6981976C01B00399770 /* BeaconCell.h */,
+				8E59A6991976C01B00399770 /* BeaconCell.m */,
 				8EDE6B5018E1291800FECE09 /* BeaconAndDate.h */,
 				8EDE6B5118E1291800FECE09 /* BeaconAndDate.m */,
 				8EDE6B5218E1291800FECE09 /* LocationManagerAndRegion.h */,
@@ -192,6 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EDE6B5518E1291800FECE09 /* LocationManagerAndRegion.m in Sources */,
+				8E59A69A1976C01B00399770 /* BeaconCell.m in Sources */,
 				8EDE6B5B18E1293000FECE09 /* BeaconBrowserViewController.m in Sources */,
 				8EDE6B2918E128D400FECE09 /* AppDelegate.m in Sources */,
 				8EDE6B5818E1292700FECE09 /* iBeaconSampleConfig.mm in Sources */,
@@ -341,6 +347,7 @@
 				8EDE6B4C18E128D400FECE09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
